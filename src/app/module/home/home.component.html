@@ -1,0 +1,46 @@
+<div class="content-home"
+  style="display: flex; justify-content: space-evenly; align-items: center; width: 100vw; height: 100vh; background-image: url('/assets/img/home_wave.svg'); background-repeat: no-repeat; background-size: cover;;">
+
+  <div>
+    <mat-card class="mat-elevation-z10 card-home">
+      <mat-card-content style="display: flex; flex-direction: column; gap: 1em; padding: 1em">
+
+        <mat-form-field>
+          <mat-label>Sede</mat-label>
+          <mat-select>
+            <mat-option value="LIM">Lima</mat-option>
+            <mat-option value="JUN">Junín</mat-option>
+            <mat-option value="CUZ">Cuzco</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Nivel</mat-label>
+          <mat-select>
+            <mat-option value="UCCI">Universidad</mat-option>
+            <mat-option value="IESC">Insituto</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Puerta</mat-label>
+          <mat-select>
+            <mat-option value="option1">Ingreso</mat-option>
+            <mat-option value="option3">Salida</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button style="width: 100%" color="primary" (click)="init()">
+          <span>
+            Comenzar
+          </span>
+          <mat-icon>arrow_right</mat-icon>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <img style="max-width: 80vw; max-height: 50vh;" src="/assets/img/online_test.svg" alt="" srcset="">
+</div>
