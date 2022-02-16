@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { CheckinCheckoutRoutingModule } from './checkin-checkout-routing.module';
 import { CheckinCheckoutComponent } from './checkin-checkout.component';
 import { MaterialModule } from '../material/material.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -13,7 +14,9 @@ import { MaterialModule } from '../material/material.module';
   imports: [
     CommonModule,
     CheckinCheckoutRoutingModule,
-    MaterialModule
+    MaterialModule,
+    FormsModule,
+    ReactiveFormsModule,
   ]
 })
 export class CheckinCheckoutModule { }

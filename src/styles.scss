@@ -11,21 +11,36 @@
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$pta-frontend-primary: mat.define-palette(mat.$purple-palette, 500);
-$pta-frontend-accent: mat.define-palette(mat.$purple-palette, 200);
-$pta-frontend-warn: mat.define-palette(mat.$red-palette);
+
+$pta-brand-primary: (Main: #6802C1,
+  Ligth: #6802C1,
+  Dark: #6802C1,
+  contrast: (Main: #fff,
+    Ligth: #5b5a5c,
+    Dark: #6802C1));
+$pta-brand-accent: (Main: #FF521D,
+  Ligth: #FF521D,
+  Dark: #FF521D,
+  contrast: (Main: #fff,
+    Ligth: #FF521D,
+    Dark: #FF521D));
+$pta-brand-warn: (Main: #EA0303,
+  Ligth: #EA0303,
+  Dark: #EA0303,
+  contrast: (Main: #fff,
+    Ligth: #EA0303,
+    Dark: #EA0303));
+
+$pta-frontend-primary: mat.define-palette($pta-brand-primary, Main, Ligth, Dark);
+$pta-frontend-accent: mat.define-palette($pta-brand-accent, Main, Ligth, Dark);
+$pta-frontend-warn: mat.define-palette($pta-brand-warn, Main, Ligth, Dark);
 
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
-$pta-frontend-theme: mat.define-light-theme(
-  (
-    color: (
-      primary: $pta-frontend-primary,
+$pta-frontend-theme: mat.define-light-theme((color: (primary: $pta-frontend-primary,
       accent: $pta-frontend-accent,
       warn: $pta-frontend-warn,
-    )
-  )
-);
+    )));
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
@@ -34,6 +49,27 @@ $pta-frontend-theme: mat.define-light-theme(
 
 /* You can add global styles to this file, and also import other style files */
 
+@font-face {
+  font-family: neue-plak-regular;
+  src: url('assets/fonts/Neue\ Plak\ Narrow\ Regular.ttf');
+}
+
+@font-face {
+  font-family: neue-plak-ligth;
+  src: url('assets/fonts/Neue\ Plak\ Light.ttf');
+}
+
+@font-face {
+  font-family: neue-plak-semibold;
+  src: url('assets/fonts/Neue\ Plak\ SemiBold.ttf');
+}
+
+@import '~@angular/material/theming';
+
+$custom-typography: mat-typography-config($font-family: neue-plak-regular);
+
+@include mat-core($custom-typography);
+
 html,
 body {
   height: 100%;
@@ -41,5 +77,10 @@ body {
 
 body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+* {
+  font-family: neue-plak-semibold;
+}
+
+$pantone-black: crimson;

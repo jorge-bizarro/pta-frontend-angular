@@ -1,20 +1,60 @@
+<mat-toolbar style="position: fixed; background-color: #212322; color: #fff;">
+  <!-- <img src="assets/img/logo_uc.png" alt="" srcset="" style="height: 50%"> -->
+  <span>Control de ingreso y salida</span>
+</mat-toolbar>
+
 <div
   style="width: 100vw; height: 100vh; background-image: url('/assets/img/checkin_wave.svg'); background-repeat: no-repeat; background-size: cover; background-position: center">
 
   <div style="width: 100%; display: flex; justify-content: center;">
 
-    <mat-card style="width: 70%; margin-top: 2em;" class="mat-elevation-z10">
+    <mat-card style="width: 70%; z-index: 9999; margin-top: 7rem;" class="mat-elevation-z10">
       <mat-card-content>
         <mat-form-field appearance="outline" style="width: 100%;">
-          <mat-label>Numero de identificación</mat-label>
-          <input matInput placeholder="Ejemplo: 12345678">
+          <mat-label>Número de identificación</mat-label>
+          <input matInput placeholder="Ejemplo: 71684905" [formControl]="documentNumber">
           <mat-icon matSuffix>credit_card</mat-icon>
+          <mat-error *ngIf="documentNumber.hasError('required')">
+            Ingrese el número de identificación
+          </mat-error>
+          <mat-error *ngIf="documentNumber.hasError('minlength')">
+            El número de identificación no es válido
+          </mat-error>
         </mat-form-field>
+
+        <ng-container>
+          <div style="display: flex; gap: 1rem;"
+            [style]="documentNumber.errors && documentNumber.touched ? 'margin-top: 1rem': ''">
+            <button mat-raised-button style="width: 100%;" color="primary" [disabled]="checkingIn || checkingOut"
+              *ngIf="doorInfo.doorType === 'BOTH' || doorInfo.doorType === 'CHECKIN'"
+              (click)="verify({ checkin: true })">
+              Registrar ingreso
+              <mat-icon>arrow_right</mat-icon>
+              <mat-spinner color="accent" diameter="25" *ngIf="checkingIn"
+                style="position: absolute; top: calc((100% - 25px) / 2); right: .5rem;">
+              </mat-spinner>
+            </button>
+            <button mat-raised-button style="width: 100%" color="primary" [disabled]="checkingIn || checkingOut"
+              *ngIf="doorInfo.doorType === 'BOTH' || doorInfo.doorType === 'CHECKOUT'"
+              (click)="verify({ checkin: false })">
+              Registrar salida
+              <mat-icon>arrow_right</mat-icon>
+              <mat-spinner color="accent" diameter="25" *ngIf="checkingOut"
+                style="position: absolute; top: calc((100% - 25px) / 2); right: .5rem;">
+              </mat-spinner>
+            </button>
+          </div>
+        </ng-container>
+
       </mat-card-content>
     </mat-card>
 
   </div>
 
-  <img style="max-width: 80vw; max-height: 50vh; position: absolute; right: 2em; bottom: 5em;"
-    src="/assets/img/personal_information.svg" alt="" srcset="">
+  <div style="width: 100%; display: flex; justify-content: center;">
+    <img style="position: absolute; bottom: 3rem; max-width: 80vw; max-height: 30vh;"
+      src="/assets/img/personal_information.svg" alt="" srcset="">
+
+  </div>
+
 </div>

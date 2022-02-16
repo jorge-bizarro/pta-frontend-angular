@@ -1,41 +1,58 @@
+<mat-toolbar class="toolbar" style="position: fixed; background-color: #212322; color: #fff;">
+  <!-- <img src="assets/img/logo_uc.png" alt="" srcset="" style="height: 50%"> -->
+  <span>Control de ingreso y salida</span>
+</mat-toolbar>
+
 <div class="content-home"
   style="display: flex; justify-content: space-evenly; align-items: center; width: 100vw; height: 100vh; background-image: url('/assets/img/home_wave.svg'); background-repeat: no-repeat; background-size: cover;;">
 
+
   <div>
     <mat-card class="mat-elevation-z10 card-home">
-      <mat-card-content style="display: flex; flex-direction: column; gap: 1em; padding: 1em">
+      <mat-card-content>
 
-        <mat-form-field>
-          <mat-label>Sede</mat-label>
-          <mat-select>
-            <mat-option value="LIM">Lima</mat-option>
-            <mat-option value="JUN">Junín</mat-option>
-            <mat-option value="CUZ">Cuzco</mat-option>
-          </mat-select>
-        </mat-form-field>
+        <form [formGroup]="doorForm" style="display: flex; flex-direction: column; gap: 1em; padding: 1em">
+          <mat-form-field>
+            <mat-label>Sede</mat-label>
+            <mat-select formControlName="campus" [errorStateMatcher]="matcher">
+              <mat-option value="LIM">Lima</mat-option>
+              <mat-option value="JUN">Junín</mat-option>
+              <mat-option value="CUZ">Cuzco</mat-option>
+            </mat-select>
+            <mat-error *ngIf="doorForm.get('campus')?.hasError('required')">
+              Seleccione
+            </mat-error>
+          </mat-form-field>
 
-        <mat-form-field>
-          <mat-label>Nivel</mat-label>
-          <mat-select>
-            <mat-option value="UCCI">Universidad</mat-option>
-            <mat-option value="IESC">Insituto</mat-option>
-          </mat-select>
-        </mat-form-field>
+          <mat-form-field>
+            <mat-label>Nivel</mat-label>
+            <mat-select formControlName="level" [errorStateMatcher]="matcher">
+              <mat-option value="UCCI">Universidad</mat-option>
+              <mat-option value="IESC">Insituto</mat-option>
+            </mat-select>
+            <mat-error *ngIf="doorForm.get('level')?.hasError('required')">
+              Seleccione
+            </mat-error>
+          </mat-form-field>
 
-        <mat-form-field>
-          <mat-label>Puerta</mat-label>
-          <mat-select>
-            <mat-option value="option1">Ingreso</mat-option>
-            <mat-option value="option3">Salida</mat-option>
-          </mat-select>
-        </mat-form-field>
+          <mat-form-field>
+            <mat-label>Puerta</mat-label>
+            <mat-select formControlName="doorType" [errorStateMatcher]="matcher">
+              <mat-option value="CHECKIN">Ingreso</mat-option>
+              <mat-option value="CHECKOUT">Salida</mat-option>
+              <mat-option value="BOTH">Ambos</mat-option>
+            </mat-select>
+            <mat-error *ngIf="doorForm.get('doorType')?.hasError('required')">
+              Seleccione
+            </mat-error>
+          </mat-form-field>
+
+        </form>
 
       </mat-card-content>
       <mat-card-actions>
         <button mat-raised-button style="width: 100%" color="primary" (click)="init()">
-          <span>
-            Comenzar
-          </span>
+          Comenzar
           <mat-icon>arrow_right</mat-icon>
         </button>
       </mat-card-actions>
