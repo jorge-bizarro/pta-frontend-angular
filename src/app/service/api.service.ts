@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -13,12 +12,12 @@ export class ApiService {
     private httpClient: HttpClient
   ) { }
 
-  getToken({ campus, level, doorType }: any) {
-    return this.httpClient.post(`${this.baseUrl}/api/v1/auth/get-token`, { campus, level, doorType });
+  getToken({ campus, level }: any) {
+    return this.httpClient.post(`${this.baseUrl}/api/v1/auth/get-token`, { campus, level });
   }
 
   registerCheckinOrCheckout({ campus, level, checkin, documentNumber }: any) {
-    return this.httpClient.post(`${this.baseUrl}/api/v1/person/checkin-checkout`, { campus, level, checkin, documentNumber });
+    return this.httpClient.post(`${this.baseUrl}/api/v1/student/checkin-checkout`, { campus, level, checkin, documentNumber });
   }
 
 }

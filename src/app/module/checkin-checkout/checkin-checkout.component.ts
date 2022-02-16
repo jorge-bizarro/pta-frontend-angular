@@ -55,10 +55,10 @@ export class CheckinCheckoutComponent implements OnInit {
         return;
       }
 
-      if (infoResponse.recordedEntryOrExit) {
-        alert(checkin ? 'Ingreso registrado' : 'Salida registrado')
+      if (checkin) {
+        alert(infoResponse.pass ? 'APTO' : 'NO APTO >> ' + infoResponse.message);
       } else {
-        alert(`${infoResponse.message}`)
+        alert('Salida registrada');
       }
 
       console.log(infoResponse);
