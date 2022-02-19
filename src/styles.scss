@@ -16,7 +16,7 @@ $pta-brand-primary: (Main: #6802C1,
   Ligth: #6802C1,
   Dark: #6802C1,
   contrast: (Main: #fff,
-    Ligth: #5b5a5c,
+    Ligth: #6802C1,
     Dark: #6802C1));
 $pta-brand-accent: (Main: #FF521D,
   Ligth: #FF521D,
@@ -66,7 +66,7 @@ $pta-frontend-theme: mat.define-light-theme((color: (primary: $pta-frontend-prim
 
 @import '~@angular/material/theming';
 
-$custom-typography: mat-typography-config($font-family: neue-plak-regular);
+$custom-typography: mat-typography-config($font-family: neue-plak-semibold);
 
 @include mat-core($custom-typography);
 
@@ -80,7 +80,6 @@ body {
 }
 
 * {
-  font-family: neue-plak-semibold;
+  // font-family: neue-plak-semibold;
+  font-size: 1.1rem;
 }
-
-$pantone-black: crimson;

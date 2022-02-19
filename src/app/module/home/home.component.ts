@@ -16,10 +16,43 @@ export class HomeComponent implements OnInit {
   doorForm = new FormGroup({
     campus: new FormControl('', Validators.required),
     level: new FormControl('', Validators.required),
-    doorType: new FormControl('', Validators.required)
+    type: new FormControl('', Validators.required)
   });
 
   matcher = new MyErrorStateMatcher();
+
+  campusList = [{
+    code: 'HYO',
+    name: 'HUANCAYO'
+  }, {
+    code: 'LIM',
+    name: 'LIMA'
+  }, {
+    code: 'AQP',
+    name: 'AREQUIPA'
+  }, {
+    code: 'CUZ',
+    name: 'CUZCO'
+  }]
+
+  levelList = [{
+    code: 'UCCI',
+    name: 'UNIVERSIDAD'
+  }, {
+    code: 'IESC',
+    name: 'INSTITUTO'
+  }]
+
+  doorTypeList = [{
+    code: 'CHECKIN',
+    name: 'INGRESO'
+  }, {
+    code: 'CHECKOUT',
+    name: 'SALIDA'
+  }, {
+    code: 'BOTH',
+    name: 'INGRESO - SALIDA'
+  }]
 
   constructor(
     private router: Router,
@@ -34,7 +67,9 @@ export class HomeComponent implements OnInit {
       return;
     }
 
-    this.apiService.getToken(this.doorForm.value)
+    const { campus, level } = this.doorForm.value;
+
+    this.apiService.getToken({ campus: campus.code, level: level.code })
       .subscribe(
         (dataResponse: any) => {
           if (dataResponse.ok) {

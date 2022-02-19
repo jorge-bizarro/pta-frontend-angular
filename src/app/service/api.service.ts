@@ -12,12 +12,16 @@ export class ApiService {
     private httpClient: HttpClient
   ) { }
 
-  getToken({ campus, level }: any) {
-    return this.httpClient.post(`${this.baseUrl}/api/v1/auth/get-token`, { campus, level });
+  getToken(requestBody: any) {
+    return this.httpClient.post(`${this.baseUrl}/api/v1/auth/get-token`, requestBody);
   }
 
-  registerCheckinOrCheckout({ campus, level, checkin, documentNumber }: any) {
-    return this.httpClient.post(`${this.baseUrl}/api/v1/student/checkin-checkout`, { campus, level, checkin, documentNumber });
+  registerCheckinOrCheckout(requestBody: any) {
+    return this.httpClient.post(`${this.baseUrl}/api/v1/student/checkin-checkout`, requestBody);
+  }
+
+  getCapacity() {
+    return this.httpClient.get(`${this.baseUrl}/api/v1/student/capacity`);
   }
 
 }

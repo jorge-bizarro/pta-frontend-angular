@@ -1,18 +1,40 @@
-<mat-toolbar style="position: fixed; background-color: #212322; color: #fff;">
-  <!-- <img src="assets/img/logo_uc.png" alt="" srcset="" style="height: 50%"> -->
-  <span>Control de ingreso y salida</span>
-</mat-toolbar>
+<div style="width: 100vw; height: 100vh; display: grid; grid-template-columns: 1fr 2fr;">
 
-<div
-  style="width: 100vw; height: 100vh; background-image: url('/assets/img/checkin_wave.svg'); background-repeat: no-repeat; background-size: cover; background-position: center">
+  <mat-toolbar
+    style="height: 80px; position: fixed; background-color: #212322; color: #fff; display: flex; justify-content: space-between; grid-column: 2fr;">
+    <img src="assets/img/logo_uc.png" alt="" srcset="" style="height: 50%">
+    <div style="display: flex; flex-direction: column; padding: .5rem 0;">
+      <span *ngIf="doorInfo">SEDE: {{ doorInfo.campus.name }} </span>
+      <span *ngIf="doorInfo">NIVEL: {{ doorInfo.level.name }} </span>
+    </div>
+  </mat-toolbar>
 
-  <div style="width: 100%; display: flex; justify-content: center;">
+  <div style="background-image: url(assets/img/ucbg.jpg); background-repeat: no-repeat; background-size: cover;
+    background-position: center; box-shadow: inset 0 0 0 100vh #0202C650;">
+  </div>
 
-    <mat-card style="width: 70%; z-index: 9999; margin-top: 7rem;" class="mat-elevation-z10">
+  <div style="margin-top: 100px;">
+
+    <div *ngIf="capacity">
+      <div style="display: flex; justify-content: flex-end; width: 90%; margin: 0 auto;">
+        <div style="background-color: #6802C1; color: #fff; padding: 1rem;">
+          <span>AFORO: {{ capacity.updateCapacityValue }} de {{ capacity.maxCapacityValue }} </span>
+        </div>
+      </div>
+    </div>
+
+    <mat-card class="mat-elevation-z10" style="width: 90%; margin: 1rem auto 0 auto;">
       <mat-card-content>
+        <div style="display: flex; justify-content: space-between; text-transform: uppercase; margin-bottom: 1.5rem;">
+          <span *ngIf="doorInfo">
+            PUERTA: {{ doorInfo.type.name }}
+          </span>
+          <span>{{ actualDate }}</span>
+        </div>
+
         <mat-form-field appearance="outline" style="width: 100%;">
-          <mat-label>Número de identificación</mat-label>
-          <input matInput placeholder="Ejemplo: 71684905" [formControl]="documentNumber">
+          <mat-label style="text-transform: uppercase;">Número de identificación</mat-label>
+          <input matInput [formControl]="documentNumber">
           <mat-icon matSuffix>credit_card</mat-icon>
           <mat-error *ngIf="documentNumber.hasError('required')">
             Ingrese el número de identificación
@@ -22,24 +44,22 @@
           </mat-error>
         </mat-form-field>
 
-        <ng-container>
+        <ng-container *ngIf="doorInfo">
           <div style="display: flex; gap: 1rem;"
             [style]="documentNumber.errors && documentNumber.touched ? 'margin-top: 1rem': ''">
-            <button mat-raised-button style="width: 100%;" color="primary" [disabled]="checkingIn || checkingOut"
-              *ngIf="doorInfo.doorType === 'BOTH' || doorInfo.doorType === 'CHECKIN'"
-              (click)="verify({ checkin: true })">
-              Registrar ingreso
+            <button mat-raised-button style="width: 100%;" color="primary" [disabled]="loading"
+              *ngIf="doorInfo.type.code === 'BOTH' || doorInfo.type.code === 'CHECKIN'" (click)="verify(true)">
+              REGISTRAR INGRESO
               <mat-icon>arrow_right</mat-icon>
-              <mat-spinner color="accent" diameter="25" *ngIf="checkingIn"
+              <mat-spinner color="accent" diameter="25" *ngIf="checkingIn && loading"
                 style="position: absolute; top: calc((100% - 25px) / 2); right: .5rem;">
               </mat-spinner>
             </button>
-            <button mat-raised-button style="width: 100%" color="primary" [disabled]="checkingIn || checkingOut"
-              *ngIf="doorInfo.doorType === 'BOTH' || doorInfo.doorType === 'CHECKOUT'"
-              (click)="verify({ checkin: false })">
-              Registrar salida
+            <button mat-raised-button style="width: 100%" color="primary" [disabled]="loading"
+              *ngIf="doorInfo.type.code === 'BOTH' || doorInfo.type.code === 'CHECKOUT'" (click)="verify(false)">
+              REGISTRAR SALIDA
               <mat-icon>arrow_right</mat-icon>
-              <mat-spinner color="accent" diameter="25" *ngIf="checkingOut"
+              <mat-spinner color="accent" diameter="25" *ngIf="!checkingIn && loading"
                 style="position: absolute; top: calc((100% - 25px) / 2); right: .5rem;">
               </mat-spinner>
             </button>
@@ -49,11 +69,47 @@
       </mat-card-content>
     </mat-card>
 
-  </div>
+    <mat-card class="mat-elevation-z10" style="width: 90%; margin: 1rem auto 0 auto;" *ngIf="!loading && statusMessage">
+      <mat-card-content>
+        <p>
+          <mat-list>
+            <mat-list-item>
+              <mat-icon matListIcon>{{ pass ? 'done' : 'warning' }}</mat-icon>
+              <p matLine style="font-size: 2rem; padding-bottom: 1rem;"
+                [style.color]="checkingIn && !pass ? ' #EA0303' : '#6802C1'">
+                {{ statusMessage }}
+              </p>
+            </mat-list-item>
+          </mat-list>
+        </p>
+      </mat-card-content>
+    </mat-card>
 
-  <div style="width: 100%; display: flex; justify-content: center;">
-    <img style="position: absolute; bottom: 3rem; max-width: 80vw; max-height: 30vh;"
-      src="/assets/img/personal_information.svg" alt="" srcset="">
+    <mat-card class="mat-elevation-z10" style="width: 90%; margin: 1rem auto 0 auto;"
+      *ngIf="student && !loading && checkingIn">
+      <mat-card-header style="align-items: center;">
+        <mat-card-title>
+          {{ student.name }} {{ student.lastname }} - {{ student.studentCode }}
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr;">
+          <div>
+            <mat-list>
+              <mat-list-item *ngFor="let item of checklist">
+                <mat-icon matListIcon>{{ item.icon }}</mat-icon>
+                <h3 matLine> {{ item.description }} </h3>
+              </mat-list-item>
+            </mat-list>
+          </div>
+
+          <div style="display: flex; justify-content: right; align-items: center;">
+            <img [src]="student.photoUrl" alt="" srcset="" style="max-width: 50%; max-height: 200px;">
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
 
   </div>
 

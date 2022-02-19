@@ -20,7 +20,7 @@ export class CatchHttpErrorInterceptor implements HttpInterceptor {
         catchError((err: HttpErrorResponse) => {
           console.log('catch error', err);
 
-          alert('Ocurrió  un error inesperado. Vuelva a intentarlo.')
+          // alert('Ocurrió  un error inesperado. Vuelva a intentarlo.')
 
           return throwError(err)
         })
