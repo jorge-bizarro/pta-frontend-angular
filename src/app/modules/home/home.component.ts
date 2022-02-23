@@ -1,10 +1,14 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormGroupDirective, NgForm, Validators } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { Router } from '@angular/router';
-import { DoorInfo } from 'src/app/class/door-info';
-import { ApiService } from 'src/app/service/api.service';
+import { DoorTypeEnum } from 'src/app/enums/door-type';
+import { IApiResponse } from 'src/app/interfaces/api-response';
+import { ICampus } from 'src/app/interfaces/campus';
+import { IDoor } from 'src/app/interfaces/door';
+import { IDoorType } from 'src/app/interfaces/door-type';
+import { ILevel } from 'src/app/interfaces/level';
+import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-home',
@@ -21,7 +25,7 @@ export class HomeComponent implements OnInit {
 
   matcher = new MyErrorStateMatcher();
 
-  campusList = [{
+  campusList: ICampus[] = [{
     code: 'HYO',
     name: 'HUANCAYO'
   }, {
@@ -35,7 +39,7 @@ export class HomeComponent implements OnInit {
     name: 'CUZCO'
   }]
 
-  levelList = [{
+  levelList: ILevel[] = [{
     code: 'UCCI',
     name: 'UNIVERSIDAD'
   }, {
@@ -43,14 +47,14 @@ export class HomeComponent implements OnInit {
     name: 'INSTITUTO'
   }]
 
-  doorTypeList = [{
-    code: 'CHECKIN',
+  doorTypeList: IDoorType[] = [{
+    code: DoorTypeEnum.CHECKIN,
     name: 'INGRESO'
   }, {
-    code: 'CHECKOUT',
+    code: DoorTypeEnum.CHECKOUT,
     name: 'SALIDA'
   }, {
-    code: 'BOTH',
+    code: DoorTypeEnum.BOTH,
     name: 'INGRESO - SALIDA'
   }]
 
@@ -71,25 +75,21 @@ export class HomeComponent implements OnInit {
 
     this.apiService.getToken({ campus: campus.code, level: level.code })
       .subscribe(
-        (dataResponse: any) => {
-          if (dataResponse.ok) {
-            localStorage.setItem('pta-token', dataResponse.data.token);
+        (responseData: IApiResponse) => {
+          const { ok, data, error } = responseData;
+
+          if (ok) {
+            localStorage.setItem('pta-token', data.token);
             this.router.navigate(['checkin-checkout'], {
               state: {
-                doorInfo: this.doorForm.value as DoorInfo
+                door: this.doorForm.value as IDoor
               }
             });
           } else {
-            alert(dataResponse.error)
+            alert(error)
           }
-        },
-        (errorResponse: any) => {
-          if (errorResponse instanceof HttpErrorResponse) {
-            alert(errorResponse.error)
-          }
-
-          console.log('customize error', errorResponse);
-        })
+        }
+      )
   }
 
 }

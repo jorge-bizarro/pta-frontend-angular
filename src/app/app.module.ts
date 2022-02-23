@@ -4,10 +4,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatInputModule } from '@angular/material/input';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { TokenInterceptor } from './interceptor/token.interceptor';
-import { CatchHttpErrorInterceptor } from './interceptor/catch-http-error.interceptor';
+import { TokenInterceptor } from './interceptors/token.interceptor';
+import { CatchHttpErrorInterceptor } from './interceptors/catch-http-error.interceptor';
 
 
 @NgModule({
@@ -18,7 +17,6 @@ import { CatchHttpErrorInterceptor } from './interceptor/catch-http-error.interc
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    MatInputModule,
     HttpClientModule,
   ],
   providers: [{

@@ -7,10 +7,10 @@ const routes: Routes = [{
   pathMatch: 'full'
 }, {
   path: 'home',
-  loadChildren: () => import('./module/home/home.module').then(m => m.HomeModule)
+  loadChildren: () => import('./modules/home/home.module').then(m => m.HomeModule)
 }, {
   path: 'checkin-checkout',
-  loadChildren: () => import('./module/checkin-checkout/checkin-checkout.module').then(m => m.CheckinCheckoutModule)
+  loadChildren: () => import('./modules/checkin-checkout/checkin-checkout.module').then(m => m.CheckinCheckoutModule)
 }];
 
 @NgModule({

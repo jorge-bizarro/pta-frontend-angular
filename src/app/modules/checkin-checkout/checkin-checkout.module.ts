@@ -2,21 +2,21 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { CheckinCheckoutRoutingModule } from './checkin-checkout-routing.module';
-import { CheckinCheckoutComponent } from './checkin-checkout.component';
-import { MaterialModule } from '../material/material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MaterialModule } from 'src/app/material.module';
+import { CheckinCheckoutComponent } from './checkin-checkout.component';
 
 
 @NgModule({
   declarations: [
-    CheckinCheckoutComponent
+    CheckinCheckoutComponent,
   ],
   imports: [
     CommonModule,
     CheckinCheckoutRoutingModule,
-    MaterialModule,
     FormsModule,
     ReactiveFormsModule,
+    MaterialModule,
   ]
 })
 export class CheckinCheckoutModule { }

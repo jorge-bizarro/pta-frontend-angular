@@ -2,7 +2,16 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ApiService } from 'src/app/service/api.service';
+import { interval, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { DoorTypeEnum } from 'src/app/enums/door-type';
+import { IDoor } from 'src/app/interfaces/door';
+import { ApiService } from 'src/app/services/api.service';
+
+enum CheckingType {
+  CHECKOUT = 0,
+  CHECKIN = 1,
+}
 
 @Component({
   selector: 'app-checkin-checkout',
@@ -11,7 +20,7 @@ import { ApiService } from 'src/app/service/api.service';
 })
 export class CheckinCheckoutComponent implements OnInit {
 
-  doorInfo: IDoor;
+  door: IDoor;
   student: IStudent;
   documentNumber = new FormControl('', [Validators.required, Validators.minLength(8)]);
   checkingIn: boolean;
@@ -20,28 +29,42 @@ export class CheckinCheckoutComponent implements OnInit {
   statusMessage: string;
   checklist: ICheckList[];
   capacity: ICapacity;
-  actualDate: string;
+  actualDate$: Observable<string> = interval(300)
+    .pipe(
+      map(() => new Date().toLocaleString().replace(/,/g, '').split(' ').reverse().join(' '))
+    );
 
   constructor(
     private router: Router,
     private apiService: ApiService,
   ) {
-    this.doorInfo = this.router.getCurrentNavigation()?.extras.state?.doorInfo as IDoor;
+    this.door = this.router.getCurrentNavigation()?.extras.state?.door as IDoor;
 
-    if (!this.doorInfo) {
+    if (!this.door) {
       this.router.navigate(['home'])
     }
-
-    this.actualDate = new Date().toLocaleString().replace(/,/g, '');
   }
 
   ngOnInit(): void {
     this.getCapacity();
   }
 
+  onKeyPress(event: KeyboardEvent): void {
+    if (event.which !== 13)
+      return;
+
+    console.log('enter');
+
+    if (this.door.type.code === DoorTypeEnum.CHECKIN)
+      this.registerChecking(CheckingType.CHECKIN);
+
+    if (this.door.type.code === DoorTypeEnum.CHECKOUT)
+      this.registerChecking(CheckingType.CHECKOUT);
+
+  }
+
   getCapacity() {
-    this.apiService
-      .getCapacity()
+    this.apiService.getCapacity()
       .subscribe(
         (responseHTTP: any) => {
           this.capacity = responseHTTP.data;
@@ -49,7 +72,8 @@ export class CheckinCheckoutComponent implements OnInit {
       )
   }
 
-  async verify(checkin: boolean) {
+  async registerChecking(checkingType: CheckingType) {
+    this.checkingIn = (checkingType === CheckingType.CHECKIN);
 
     if (!this.documentNumber.valid) {
       this.documentNumber.markAsTouched();
@@ -57,11 +81,10 @@ export class CheckinCheckoutComponent implements OnInit {
     }
 
     this.loading = true;
-    this.checkingIn = checkin;
 
     try {
       const responseHTTP: any = await this.apiService.registerCheckinOrCheckout({
-        checkin,
+        checkin: this.checkingIn,
         documentNumber: this.documentNumber.value
       }).toPromise();
 
@@ -79,12 +102,10 @@ export class CheckinCheckoutComponent implements OnInit {
       this.student = student;
       this.checklist = checklist;
 
-      if (checkin) {
-        // Si el estudiante está ingresando al campus
+      if (this.checkingIn) {
         this.statusMessage = pass ? 'Apto para ingresar al campus' : 'No apto para ingresar al campus';
       } else {
-        // Si el estudiante está saliendo del campus
-        this.statusMessage = 'Se registró la salida del estudiante';
+        this.statusMessage = 'Se registró la salida';
       }
 
       console.log(data);
@@ -103,12 +124,6 @@ export class CheckinCheckoutComponent implements OnInit {
     }
   }
 
-}
-
-interface IDoor {
-  campus: any;
-  level: any;
-  type: any;
 }
 
 interface IStudent {
