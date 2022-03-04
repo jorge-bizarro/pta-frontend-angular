@@ -32,22 +32,16 @@
                       {{ option.name }}
                     </mat-option>
                   </mat-select>
-                  <mat-error *ngIf="doorForm.get('campus')?.hasError('required')">
-                    Seleccione
-                  </mat-error>
                 </mat-form-field>
 
-                <mat-form-field>
+                <!-- <mat-form-field>
                   <mat-label>NIVEL</mat-label>
                   <mat-select formControlName="level" [errorStateMatcher]="matcher">
                     <mat-option [value]="option" *ngFor="let option of levelList">
                       {{ option.name }}
                     </mat-option>
                   </mat-select>
-                  <mat-error *ngIf="doorForm.get('level')?.hasError('required')">
-                    Seleccione
-                  </mat-error>
-                </mat-form-field>
+                </mat-form-field> -->
 
                 <mat-form-field>
                   <mat-label>PUERTA</mat-label>
@@ -56,9 +50,6 @@
                       {{ option.name }}
                     </mat-option>
                   </mat-select>
-                  <mat-error *ngIf="doorForm.get('doorType')?.hasError('required')">
-                    Seleccione
-                  </mat-error>
                 </mat-form-field>
               </form>
 
@@ -74,7 +65,6 @@
             <mat-icon>arrow_right</mat-icon>
           </button>
         </div>
-
 
       </div>
     </div>

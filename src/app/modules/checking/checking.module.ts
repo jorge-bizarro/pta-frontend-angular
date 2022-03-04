@@ -1,22 +1,22 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { CheckinCheckoutRoutingModule } from './checkin-checkout-routing.module';
+import { CheckingRoutingModule } from './checking-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from 'src/app/material.module';
-import { CheckinCheckoutComponent } from './checkin-checkout.component';
-
+import { CheckingComponent } from './checking.component';
+import { SharedModule } from 'src/app/shared.module';
 
 @NgModule({
   declarations: [
-    CheckinCheckoutComponent,
+    CheckingComponent,
   ],
   imports: [
     CommonModule,
-    CheckinCheckoutRoutingModule,
+    CheckingRoutingModule,
     FormsModule,
     ReactiveFormsModule,
     MaterialModule,
+    SharedModule,
   ]
 })
-export class CheckinCheckoutModule { }
+export class CheckingModule { }

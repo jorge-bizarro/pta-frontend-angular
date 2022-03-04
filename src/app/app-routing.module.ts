@@ -1,17 +1,15 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
-const routes: Routes = [{
-  path: '',
-  redirectTo: 'home',
-  pathMatch: 'full'
-}, {
-  path: 'home',
-  loadChildren: () => import('./modules/home/home.module').then(m => m.HomeModule)
-}, {
-  path: 'checkin-checkout',
-  loadChildren: () => import('./modules/checkin-checkout/checkin-checkout.module').then(m => m.CheckinCheckoutModule)
-}];
+const routes: Routes = [
+  {
+    path: '',
+    loadChildren: () => import('./modules/home/home.module').then(m => m.HomeModule)
+  }, {
+    path: 'checking',
+    loadChildren: () => import('./modules/checking/checking.module').then(m => m.CheckingModule)
+  }
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, {

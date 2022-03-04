@@ -18,11 +18,19 @@ export class ApiService {
   }
 
   registerCheckinOrCheckout(requestBody: any) {
-    return this.httpClient.post(`${this.baseUrl}/api/v1/student/checkin-checkout`, requestBody);
+    return this.httpClient.post(`${this.baseUrl}/api/v1/pta/checkin-checkout`, requestBody);
   }
 
   getCapacity() {
-    return this.httpClient.get(`${this.baseUrl}/api/v1/student/capacity`);
+    return this.httpClient.get(`${this.baseUrl}/api/v1/pta/capacity`);
+  }
+
+  getPhotoStudentURLByPidm(pidm: number) {
+    return `${this.baseUrl}/api/v1/pta/photo?pidm=${pidm}`;
+  }
+
+  getCampus() {
+    return this.httpClient.get(`${this.baseUrl}/api/v1/pta/campus`);
   }
 
 }

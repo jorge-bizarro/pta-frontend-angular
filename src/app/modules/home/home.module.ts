@@ -1,11 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { HomeRoutingModule } from './home-routing.module';
 import { HomeComponent } from './home.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from 'src/app/material.module';
-
+import { SharedModule } from 'src/app/shared.module';
 
 @NgModule({
   declarations: [
@@ -15,7 +14,8 @@ import { MaterialModule } from 'src/app/material.module';
     CommonModule,
     HomeRoutingModule,
     ReactiveFormsModule,
-    MaterialModule
+    MaterialModule,
+    SharedModule
   ]
 })
 export class HomeModule { }

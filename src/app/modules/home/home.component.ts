@@ -7,11 +7,9 @@ import { IApiResponse } from 'src/app/interfaces/api-response';
 import { ICampus } from 'src/app/interfaces/campus';
 import { IDoor } from 'src/app/interfaces/door';
 import { IDoorType } from 'src/app/interfaces/door-type';
-import { ILevel } from 'src/app/interfaces/level';
 import { ApiService } from 'src/app/services/api.service';
 
 @Component({
-  selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
@@ -19,33 +17,21 @@ export class HomeComponent implements OnInit {
 
   doorForm = new FormGroup({
     campus: new FormControl('', Validators.required),
-    level: new FormControl('', Validators.required),
+    // level: new FormControl('', Validators.required),
     type: new FormControl('', Validators.required)
   });
 
   matcher = new MyErrorStateMatcher();
 
-  campusList: ICampus[] = [{
-    code: 'HYO',
-    name: 'HUANCAYO'
-  }, {
-    code: 'LIM',
-    name: 'LIMA'
-  }, {
-    code: 'AQP',
-    name: 'AREQUIPA'
-  }, {
-    code: 'CUZ',
-    name: 'CUZCO'
-  }]
+  campusList: ICampus[] = []
 
-  levelList: ILevel[] = [{
-    code: 'UCCI',
-    name: 'UNIVERSIDAD'
-  }, {
-    code: 'IESC',
-    name: 'INSTITUTO'
-  }]
+  // levelList: ILevel[] = [{
+  //   code: 'UCCI',
+  //   name: 'UNIVERSIDAD'
+  // }, {
+  //   code: 'IESC',
+  //   name: 'INSTITUTO'
+  // }]
 
   doorTypeList: IDoorType[] = [{
     code: DoorTypeEnum.CHECKIN,
@@ -64,6 +50,21 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.apiService.getCampus()
+      .subscribe(
+        (responseData: IApiResponse) => {
+          const { ok, data, error } = responseData;
+
+          if (ok) {
+            this.campusList = data.map((item: any) => ({
+              id: item.id,
+              name: item.campus
+            }) as ICampus)
+          } else {
+            alert(error)
+          }
+        }
+      )
   }
 
   init(): void {
@@ -71,9 +72,9 @@ export class HomeComponent implements OnInit {
       return;
     }
 
-    const { campus, level } = this.doorForm.value;
+    const { campus } = this.doorForm.value as IDoor;
 
-    this.apiService.getToken({ campus: campus.code, level: level.code })
+    this.apiService.getToken({ idCampus: campus.id })
       .subscribe(
         (responseData: IApiResponse) => {
           const { ok, data, error } = responseData;

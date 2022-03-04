@@ -4,6 +4,6 @@ import { ILevel } from "./level";
 
 export interface IDoor {
     campus: ICampus;
-    level: ILevel;
+    // level: ILevel;
     type: IDoorType;
 }

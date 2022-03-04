@@ -1,0 +1,9 @@
+<mat-toolbar
+  style="background-color: #212322; color: #fff; display: flex; justify-content: space-between; position: fixed;">
+  <img src="https://ucontinental.edu.pe/www/wp-content/uploads/2019/06/iso-white.svg" alt="" srcset=""
+    style="height: 70%">
+
+  <div style="display: flex; flex-direction: column; gap: .5rem;">
+    <span *ngIf="door">SEDE: {{ door.campus.name }} </span>
+  </div>
+</mat-toolbar>
