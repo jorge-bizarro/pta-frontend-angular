@@ -39,11 +39,11 @@ export class CheckingComponent implements OnInit, AfterViewInit {
     private apiService: ApiService,
     private cd: ChangeDetectorRef,
   ) {
-    // this.door = this.router.getCurrentNavigation()?.extras.state?.door as IDoor;
+    this.door = this.router.getCurrentNavigation()?.extras.state?.door as IDoor;
 
-    // if (!this.door) {
-    //   this.router.navigate(['home'])
-    // }
+    if (!this.door) {
+      this.router.navigate([''])
+    }
   }
 
   getDatetime(): string {
@@ -115,8 +115,14 @@ export class CheckingComponent implements OnInit, AfterViewInit {
             this.student = student;
 
             if (this.checkingIn) {
-              this.student.photoUrl = this.apiService.getPhotoStudentURLByPidm(student.pidm);
-              this.statusMessage = pass ? 'Apto para ingresar al campus' : 'No apto para ingresar al campus';
+
+              if (student) {
+                this.student.photoUrl = this.apiService.getPhotoStudentURLByPidm(student.pidm);
+                this.statusMessage = pass ? 'Apto para ingresar al campus' : 'No apto para ingresar al campus';
+              } else {
+                this.statusMessage = 'Bienvenido al campus';
+              }
+
             } else {
               this.statusMessage = 'Se registró la salida';
             }

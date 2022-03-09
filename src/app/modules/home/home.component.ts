@@ -81,7 +81,7 @@ export class HomeComponent implements OnInit {
 
           if (ok) {
             localStorage.setItem('pta-token', data.token);
-            this.router.navigate(['checkin-checkout'], {
+            this.router.navigate(['checking'], {
               state: {
                 door: this.doorForm.value as IDoor
               }
