@@ -7,6 +7,7 @@ import { IApiResponse } from 'src/app/interfaces/api-response';
 import { ICampus } from 'src/app/interfaces/campus';
 import { IDoor } from 'src/app/interfaces/door';
 import { IDoorType } from 'src/app/interfaces/door-type';
+import { ILevel } from 'src/app/interfaces/level';
 import { ApiService } from 'src/app/services/api.service';
 
 @Component({
@@ -17,22 +18,14 @@ export class HomeComponent implements OnInit {
 
   doorForm = new FormGroup({
     campus: new FormControl('', Validators.required),
-    // level: new FormControl('', Validators.required),
+    level: new FormControl('', Validators.required),
     type: new FormControl('', Validators.required)
   });
 
   matcher = new MyErrorStateMatcher();
 
-  campusList: ICampus[] = []
-
-  // levelList: ILevel[] = [{
-  //   code: 'UCCI',
-  //   name: 'UNIVERSIDAD'
-  // }, {
-  //   code: 'IESC',
-  //   name: 'INSTITUTO'
-  // }]
-
+  campusList: ICampus[] = [];
+  levelList: ILevel[] = [];
   doorTypeList: IDoorType[] = [{
     code: DoorTypeEnum.CHECKIN,
     name: 'INGRESO'
@@ -42,7 +35,7 @@ export class HomeComponent implements OnInit {
   }, {
     code: DoorTypeEnum.BOTH,
     name: 'INGRESO - SALIDA'
-  }]
+  }];
 
   constructor(
     private router: Router,
@@ -50,6 +43,10 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.getCampus();
+  }
+
+  getCampus() {
     this.apiService.getCampus()
       .subscribe(
         (responseData: IApiResponse) => {
@@ -58,10 +55,31 @@ export class HomeComponent implements OnInit {
           if (ok) {
             this.campusList = data.map((item: any) => ({
               id: item.id,
-              name: item.campus
+              code: item.campusCode,
+              description: item.campusDescription
             }) as ICampus)
           } else {
-            alert(error)
+            console.log(error);
+          }
+        }
+      )
+  }
+
+  getLevel() {
+    const campusSelected = this.doorForm.controls.campus.value as ICampus;
+
+    this.apiService.getLevel(campusSelected.id)
+      .subscribe(
+        (responseData: IApiResponse) => {
+          const { ok, data, error } = responseData;
+
+          if (ok) {
+            this.levelList = data.map((item: any) => ({
+              code: item.levelCode,
+              description: item.levelDescription
+            }) as ILevel)
+          } else {
+            console.log(error);
           }
         }
       )
@@ -72,9 +90,14 @@ export class HomeComponent implements OnInit {
       return;
     }
 
-    const { campus } = this.doorForm.value as IDoor;
+    const { campus, level } = this.doorForm.value as IDoor;
+    const payload = {
+      campusId: campus.id,
+      campusCode: campus.code,
+      levelCode: level.code,
+    }
 
-    this.apiService.getToken({ idCampus: campus.id })
+    this.apiService.getToken(payload)
       .subscribe(
         (responseData: IApiResponse) => {
           const { ok, data, error } = responseData;
@@ -87,7 +110,7 @@ export class HomeComponent implements OnInit {
               }
             });
           } else {
-            alert(error)
+            console.log(error);
           }
         }
       )

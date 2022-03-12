@@ -6,7 +6,7 @@
     background-position: center; box-shadow: inset 0 0 0 100vh #0202C650;">
   </div>
 
-  <div style="margin-top: 80px; padding: 1rem; display: flex; flex-direction: column; gap: 1rem;">
+  <div style="margin-top: 70px; padding: 1rem; display: flex; flex-direction: column; gap: 1rem;">
 
     <div *ngIf="capacity" style="display: flex; justify-content: end;">
       <div style="background-color: #6802C1; color: #fff; padding: .5rem; border-radius: 4px;">
@@ -25,8 +25,7 @@
 
         <mat-form-field style="width: 100%;">
           <mat-label>NÚMERO DE IDENTIFICACIÓN</mat-label>
-          <input matInput #documentNumberInput [formControl]="documentNumber" (keypress)="onKeyPress($event)"
-            (blur)="onBlur()">
+          <input matInput #documentNumberInput [formControl]="documentNumber" (keydown.enter)="onKeydownEnter()">
           <mat-icon matSuffix>credit_card</mat-icon>
         </mat-form-field>
 
@@ -63,9 +62,9 @@
       </mat-card-content>
     </mat-card>
 
-    <mat-card class="mat-elevation-z4" *ngIf="student && !loading && checkingIn">
-      <mat-card-header style="justify-content: center; text-transform: capitalize;">
-        <mat-card-title>
+    <mat-card class="mat-elevation-z4" *ngIf="!loading && checkingIn">
+      <mat-card-header style="justify-content: center; text-transform: capitalize;" *ngIf="student">
+        <mat-card-title style="font-size: 1.5rem">
           {{ student.name }} {{ student.lastname }} - {{ student.studentCode }}
         </mat-card-title>
       </mat-card-header>
@@ -75,15 +74,15 @@
           <div>
             <mat-list>
               <mat-list-item *ngFor="let item of checklist">
-                <mat-icon matListIcon>{{ item.icon }}</mat-icon>
+                <mat-icon matListIcon [style.color]="item.valid ? '#00A65A' : '#EA0303'">{{ item.icon }}</mat-icon>
                 <h3 matLine style="text-transform: uppercase;"> {{ item.description }} </h3>
               </mat-list-item>
             </mat-list>
           </div>
 
-          <div style="display: flex; justify-content: right; align-items: center;">
+          <div style="display: flex; justify-content: right; align-items: center;" *ngIf="student">
             <img [src]="student.photoUrl" alt="" srcset=""
-              style="max-width: 50%; max-height: 200px; border-radius: 4px;">
+              style="max-width: 50%; height: 300px; border-radius: 4px;">
           </div>
         </div>
       </mat-card-content>

@@ -3,7 +3,8 @@
   <img src="https://ucontinental.edu.pe/www/wp-content/uploads/2019/06/iso-white.svg" alt="" srcset=""
     style="height: 70%">
 
-  <div style="display: flex; flex-direction: column; gap: .5rem;">
-    <span *ngIf="door">SEDE: {{ door.campus.name }} </span>
+  <div style="display: flex; flex-direction: column; text-transform: uppercase;">
+    <span style="font: menu; font-size: 1rem; font-family: neue-plak-semibold;" *ngIf="door">Sede: {{ door.campus.description }} </span>
+    <span style="font: menu; font-size: 1rem; font-family: neue-plak-semibold;" *ngIf="door">Nivel: {{ door.level.description }} </span>
   </div>
 </mat-toolbar>

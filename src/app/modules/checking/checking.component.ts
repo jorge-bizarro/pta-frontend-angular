@@ -8,10 +8,11 @@ import { DoorTypeEnum } from 'src/app/enums/door-type';
 import { IApiResponse } from 'src/app/interfaces/api-response';
 import { IStudent } from 'src/app/interfaces/student';
 import { ICapacity } from 'src/app/interfaces/capacity';
-import { ICheckList } from 'src/app/interfaces/checklist';
+import { ICheckListItem } from 'src/app/interfaces/checklist';
 import { IDoor } from 'src/app/interfaces/door';
 import { ApiService } from 'src/app/services/api.service';
 import { CheckingType } from 'src/app/enums/checking-type';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   templateUrl: './checking.component.html',
@@ -21,9 +22,9 @@ export class CheckingComponent implements OnInit, AfterViewInit {
 
   door: IDoor;
   student: IStudent;
-  checklist: ICheckList[];
+  checklist: ICheckListItem[];
   capacity: ICapacity;
-  documentNumber = new FormControl('', [Validators.required, Validators.minLength(8)]);
+  documentNumber = new FormControl('');
   checkingIn: boolean;
   pass: boolean;
   loading: boolean;
@@ -38,6 +39,7 @@ export class CheckingComponent implements OnInit, AfterViewInit {
     private router: Router,
     private apiService: ApiService,
     private cd: ChangeDetectorRef,
+    private sanitizer: DomSanitizer,
   ) {
     this.door = this.router.getCurrentNavigation()?.extras.state?.door as IDoor;
 
@@ -65,14 +67,9 @@ export class CheckingComponent implements OnInit, AfterViewInit {
     this.documentNumberInput.nativeElement.focus();
   }
 
-  onKeyPress(event: KeyboardEvent): void {
-    if (event.which !== 13) return;
+  onKeydownEnter(): void {
     if (this.door.type.code === DoorTypeEnum.CHECKIN) this.registerChecking(CheckingType.CHECKIN);
     if (this.door.type.code === DoorTypeEnum.CHECKOUT) this.registerChecking(CheckingType.CHECKOUT);
-  }
-
-  onBlur() {
-    if (!this.documentNumber.valid) this.focusInput();
   }
 
   getCapacity() {
@@ -86,53 +83,58 @@ export class CheckingComponent implements OnInit, AfterViewInit {
 
   registerChecking(checkingType: CheckingType) {
     this.checkingIn = (checkingType === CheckingType.CHECKIN);
-
-    if (!this.documentNumber.valid) {
-      this.documentNumber.markAsTouched();
-      this.focusInput();
-      return;
-    }
-
     this.loading = true;
+    this.student = null;
+    this.pass = false;
+    this.checklist = [];
 
     this.apiService.registerCheckinOrCheckout({
       checkin: this.checkingIn,
       documentNumber: this.documentNumber.value
     })
       .pipe(
-        finalize(() => this.loading = false)
+        finalize(() => {
+          this.loading = false;
+          this.documentNumber.reset();
+          this.focusInput();
+        })
       )
       .subscribe(
         (responseData: IApiResponse) => {
           const { ok, data, error } = responseData;
 
-          if (ok) {
-            const { pass, student, checklist, capacity } = data;
-
-            this.capacity = capacity;
-            this.pass = pass;
-            this.checklist = checklist;
-            this.student = student;
-
-            if (this.checkingIn) {
-
-              if (student) {
-                this.student.photoUrl = this.apiService.getPhotoStudentURLByPidm(student.pidm);
-                this.statusMessage = pass ? 'Apto para ingresar al campus' : 'No apto para ingresar al campus';
-              } else {
-                this.statusMessage = 'Bienvenido al campus';
-              }
-
-            } else {
-              this.statusMessage = 'Se registró la salida';
-            }
-          } else {
-            this.student = null;
+          if (!ok) {
             this.statusMessage = error.message;
+            return;
           }
 
-          this.documentNumber.reset();
-          this.focusInput();
+          const { pass, student, checklist, capacity, isEmployee } = data;
+
+          this.capacity = capacity;
+          this.pass = pass;
+          this.checklist = checklist;
+          this.student = student;
+
+          if (!this.checkingIn) {
+            this.statusMessage = 'Se registró la salida';
+            return;
+          }
+
+          if (!student) {
+            this.statusMessage = pass ? 'Bienvenido al campus' : 'No apto para ingresar al campus';
+
+            if (isEmployee) this.statusMessage += ' (Docente - Administrativo)';
+
+            return;
+          }
+
+          this.statusMessage = pass ? 'Apto para ingresar al campus' : 'No apto para ingresar al campus';
+
+          this.apiService.getPhotoStudentURLByPidm(student.pidm).subscribe((arrayBuffer: ArrayBuffer) => {
+            const objectURL = URL.createObjectURL(new Blob([arrayBuffer]));
+            this.student.photoUrl = this.sanitizer.bypassSecurityTrustUrl(objectURL);
+          });
+
         },
         (responseError: any) => {
           this.student = null;

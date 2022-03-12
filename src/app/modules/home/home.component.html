@@ -25,26 +25,26 @@
             <mat-card-content>
 
               <form [formGroup]="doorForm" style="display: flex; flex-direction: column; gap: 1em;">
-                <mat-form-field>
-                  <mat-label>SEDE</mat-label>
-                  <mat-select formControlName="campus" [errorStateMatcher]="matcher">
+                <mat-form-field style="text-transform: uppercase;">
+                  <mat-label>Sede</mat-label>
+                  <mat-select formControlName="campus" [errorStateMatcher]="matcher" (selectionChange)="getLevel()">
                     <mat-option [value]="option" *ngFor="let option of campusList">
-                      {{ option.name }}
+                      {{ option.description }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
 
-                <!-- <mat-form-field>
-                  <mat-label>NIVEL</mat-label>
+                <mat-form-field style="text-transform: uppercase;">
+                  <mat-label>Nivel</mat-label>
                   <mat-select formControlName="level" [errorStateMatcher]="matcher">
                     <mat-option [value]="option" *ngFor="let option of levelList">
-                      {{ option.name }}
+                      {{ option.description }}
                     </mat-option>
                   </mat-select>
-                </mat-form-field> -->
+                </mat-form-field>
 
-                <mat-form-field>
-                  <mat-label>PUERTA</mat-label>
+                <mat-form-field style="text-transform: uppercase;">
+                  <mat-label>Tipo de puerta</mat-label>
                   <mat-select formControlName="type" [errorStateMatcher]="matcher">
                     <mat-option [value]="option" *ngFor="let option of doorTypeList">
                       {{ option.name }}
@@ -60,8 +60,8 @@
         </div>
 
         <div style="padding: 0 1rem 1rem 1rem">
-          <button mat-raised-button (click)="init()" style="width: 100%">
-            COMENZAR
+          <button mat-raised-button (click)="init()" style="width: 100%; text-transform: uppercase;">
+            Comenzar
             <mat-icon>arrow_right</mat-icon>
           </button>
         </div>

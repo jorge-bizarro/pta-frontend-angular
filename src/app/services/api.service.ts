@@ -26,11 +26,15 @@ export class ApiService {
   }
 
   getPhotoStudentURLByPidm(pidm: number) {
-    return `${this.baseUrl}/api/v1/pta/photo?pidm=${pidm}`;
+    return this.httpClient.get(`${this.baseUrl}/api/v1/pta/photo?pidm=${pidm}`, { responseType: 'arraybuffer' });
   }
 
   getCampus() {
     return this.httpClient.get(`${this.baseUrl}/api/v1/pta/campus`);
+  }
+
+  getLevel(id: number) {
+    return this.httpClient.get(`${this.baseUrl}/api/v1/pta/level?campus=${id}`);
   }
 
 }

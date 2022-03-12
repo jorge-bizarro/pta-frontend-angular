@@ -1,4 +1,4 @@
 export interface ILevel {
-    name: string;
     code: string;
+    description: string;
 }
